@@ -21,7 +21,7 @@ export default function SignUp() {
             <input
               type="text"
               id="lastName"
-              className="border p-1 rounded-md w-44 focus:outline-none si"
+              className="border p-1 rounded-md w-44 focus:outline-none "
               placeholder="Last Name"
               required
             />
@@ -30,14 +30,14 @@ export default function SignUp() {
             <input
               type="email"
               placeholder="Email"
-              className="border p-1 rounded-md  w-full focus:outline-none si"
+              className="border p-1 rounded-md  w-full focus:outline-none "
             />
           </div>
           <div className="my-3">
             <input
               type="password"
               placeholder="New password"
-              className="border p-1 rounded-md  w-full focus:outline-none si"
+              className="border p-1 rounded-md  w-full focus:outline-none "
             />
           </div>
           <div className="my-3">
@@ -48,7 +48,7 @@ export default function SignUp() {
                 min={1}
                 max={31}
                 id="day"
-                className="border p-1 rounded-md w-32 focus:outline-none si"
+                className="border p-1 rounded-md w-32 focus:outline-none "
                 placeholder="Day"
                 required
               />
@@ -57,7 +57,7 @@ export default function SignUp() {
                 min={1}
                 max={31}
                 id="month"
-                className="border p-1 rounded-md w-32 focus:outline-none si"
+                className="border p-1 rounded-md w-32 focus:outline-none "
                 placeholder="Month"
                 required
               />
@@ -65,7 +65,7 @@ export default function SignUp() {
                 type="number"
                 id="year"
                 min={1900}
-                className="border p-1 rounded-md w-32 focus:outline-none si"
+                className="border p-1 rounded-md w-32 focus:outline-none"
                 placeholder="Year"
                 required
               />
