@@ -59,7 +59,7 @@ export default function SignUp() {
       <div className="text-center my-5">
         <h1 className="text-blue-700 text-3xl font-bold">SocioSphere</h1>
       </div>
-      <div className="bg-white max-w-md mx-auto p-3 flex flex-col items-center m-5 shadow-lg rounded-lg">
+      <div className="bg-white max-w-md mx-auto p-3 sm:p-5 flex flex-col items-center m-5 shadow-lg rounded-lg">
         <h1 className="font-bold text-xl pt-3">Create a new account</h1>
         <p className="text-slate-500 text-sm pb-3">It's quick and easy.</p>
         <form onSubmit={handleSubmit} className="mt-5 w-full">
