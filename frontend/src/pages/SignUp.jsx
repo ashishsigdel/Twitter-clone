@@ -165,9 +165,11 @@ export default function SignUp() {
           <div>
             <p className="text-sm text-slate-600">
               By clicking Sign Up, you agree our{" "}
-              <span className="text-blue-900 underline cursor-pointer">
-                Terms and condition
-              </span>
+              <Link to="/terms">
+                <span className="text-blue-900 underline cursor-pointer">
+                  Terms and condition
+                </span>
+              </Link>
               .
             </p>
           </div>
