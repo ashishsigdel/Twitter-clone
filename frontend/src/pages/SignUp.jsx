@@ -1,6 +1,59 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 
 export default function SignUp() {
+  const [formData, setFormData] = useState({
+    gender: "other",
+  });
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  console.log(formData);
+  const handleChange = (e) => {
+    if (
+      e.target.id === "female" ||
+      e.target.id === "male" ||
+      e.target.id === "other"
+    ) {
+      setFormData({
+        ...formData,
+        gender: e.target.id,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value,
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      console.log(data);
+      if (data.success === false) {
+        setLoading(false);
+        setError(data.message);
+        return;
+      }
+      setLoading(false);
+      setError(null);
+      navigate("/sign-in");
+    } catch (error) {
+      setLoading(false);
+      setError(error.message);
+    }
+  };
+
   return (
     <div className="m-2">
       <div className="text-center my-5">
@@ -9,35 +62,39 @@ export default function SignUp() {
       <div className="bg-white max-w-md mx-auto p-3 flex flex-col items-center m-5 shadow-lg rounded-lg">
         <h1 className="font-bold text-xl pt-3">Create a new account</h1>
         <p className="text-slate-500 text-sm pb-3">It's quick and easy.</p>
-        <form className="mt-5 w-full">
+        <form onSubmit={handleSubmit} className="mt-5 w-full">
           <div className="flex justify-between gap-2">
             <input
               type="text"
               id="firstName"
               className="border p-1 rounded-md w-44 focus:outline-none"
               placeholder="First Name"
-              required
+              onChange={handleChange}
             />
             <input
               type="text"
               id="lastName"
               className="border p-1 rounded-md w-44 focus:outline-none "
               placeholder="Last Name"
-              required
+              onChange={handleChange}
             />
           </div>
           <div className="my-3">
             <input
               type="email"
+              id="email"
               placeholder="Email"
               className="border p-1 rounded-md  w-full focus:outline-none "
+              onChange={handleChange}
             />
           </div>
           <div className="my-3">
             <input
               type="password"
+              id="password"
               placeholder="New password"
               className="border p-1 rounded-md  w-full focus:outline-none "
+              onChange={handleChange}
             />
           </div>
           <div className="my-3">
@@ -49,8 +106,8 @@ export default function SignUp() {
                 max={31}
                 id="day"
                 className="border p-1 rounded-md w-32 focus:outline-none "
+                onChange={handleChange}
                 placeholder="Day"
-                required
               />
               <input
                 type="number"
@@ -58,8 +115,8 @@ export default function SignUp() {
                 max={31}
                 id="month"
                 className="border p-1 rounded-md w-32 focus:outline-none "
+                onChange={handleChange}
                 placeholder="Month"
-                required
               />
               <input
                 type="number"
@@ -67,7 +124,6 @@ export default function SignUp() {
                 min={1900}
                 className="border p-1 rounded-md w-32 focus:outline-none"
                 placeholder="Year"
-                required
               />
             </div>
           </div>
@@ -79,6 +135,8 @@ export default function SignUp() {
                   type="checkbox"
                   id="female"
                   className="border p-1 rounded-md  focus:outline-none scale-125"
+                  onChange={handleChange}
+                  checked={formData.gender === "female"}
                 />
                 <span>Female</span>
               </div>
@@ -87,6 +145,8 @@ export default function SignUp() {
                   type="checkbox"
                   id="male"
                   className="border p-1 rounded-md focus:outline-none scale-125"
+                  onChange={handleChange}
+                  checked={formData.gender === "male"}
                 />
                 <span>Male</span>
               </div>
@@ -95,6 +155,8 @@ export default function SignUp() {
                   type="checkbox"
                   id="other"
                   className="border p-1 rounded-md focus:outline-none scale-125"
+                  onChange={handleChange}
+                  checked={formData.gender === "other"}
                 />
                 <span>Other</span>
               </div>
@@ -110,9 +172,13 @@ export default function SignUp() {
             </p>
           </div>
           <div className="text-center py-5">
-            <button className="w-50 bg-green-600 text-white py-1 px-7 min-w-min rounded-lg text-center hover:bg-green-700 transition duration-500">
-              Sign Up
+            <button
+              disabled={loading}
+              className="w-50 bg-green-600 text-white py-1 px-7 min-w-min rounded-lg text-center hover:bg-green-700 transition duration-500 disabled:opacity-80"
+            >
+              {loading ? "Loading..." : "Sign Up"}
             </button>
+            {error && <p className="text-sm text-red-500 my-3">{error}</p>}
           </div>
         </form>
         <Link to="/sign-in">
