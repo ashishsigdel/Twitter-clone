@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { IoEarth } from "react-icons/io5";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -57,7 +58,13 @@ export default function SignUp() {
   return (
     <div className="m-2">
       <div className="text-center my-5">
-        <h1 className="text-blue-700 text-3xl font-bold">SocioSphere</h1>
+        <h1 className="flex items-center justify-center text-blue-700 text-3xl font-bold">
+          Soci{""}
+          <span>
+            <IoEarth />
+          </span>
+          Sphere
+        </h1>
       </div>
       <div className="bg-white max-w-md mx-auto p-3 sm:p-5 flex flex-col items-center m-5 shadow-lg rounded-lg">
         <h1 className="font-bold text-xl pt-3">Create a new account</h1>

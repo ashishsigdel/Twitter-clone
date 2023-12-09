@@ -6,6 +6,7 @@ import {
   signInFailure,
 } from "../redux/user/userSlice.js";
 import { useDispatch, useSelector } from "react-redux";
+import { IoEarth } from "react-icons/io5";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -45,8 +46,12 @@ export default function SignIn() {
   return (
     <div className="flex flex-col justify-center items-center md:flex-row sm:min-h-screen">
       <div className="px-40 flex-1">
-        <h1 className="text-blue-700 text-3xl sm:text-5xl font-bold mt-3">
-          SocioSphere
+        <h1 className="flex items-center text-blue-700 text-3xl sm:text-5xl font-bold mt-3">
+          Soci{""}
+          <span>
+            <IoEarth />
+          </span>
+          Sphere
         </h1>
         <p className="text-2xl py-7 hidden md:inline-block">
           SocioSphere helps you connect and <br /> share with the people in your

@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+/* body {
   background-color: rgb(233, 231, 231);
-}
+} */
 
 @layer components {
   .hoverEffect {
