@@ -9,7 +9,6 @@ export const signUp = async (req, res, next) => {
   const {
     firstName,
     lastName,
-    userName,
     email,
     password,
     birthday,

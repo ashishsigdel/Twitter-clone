@@ -32,16 +32,13 @@ const userSchemaa = mongoose.Schema(
       max: 50,
     },
     birthDay: {
-      type: Number,
-      default: 1,
+      type: String,
     },
     birthMonth: {
-      type: Number,
-      default: 1,
+      type: String,
     },
     birthYear: {
-      type: Number,
-      default: 2000,
+      type: String,
     },
     gender: {
       type: String,
