@@ -9,6 +9,7 @@ export const signUp = async (req, res, next) => {
   const {
     firstName,
     lastName,
+    userName,
     email,
     password,
     birthday,
@@ -19,9 +20,14 @@ export const signUp = async (req, res, next) => {
     friends,
   } = req.body;
   const hashedPassword = bcryptjs.hashSync(password, 10);
+  const generatedUserName =
+    firstName.toLowerCase() +
+    lastName.toLowerCase() +
+    Math.random().toString(36).slice(-4);
   const newUser = new User({
     firstName,
     lastName,
+    userName: generatedUserName,
     email,
     password: hashedPassword,
     birthday,
