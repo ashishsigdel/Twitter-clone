@@ -12,13 +12,16 @@ export default function Sidebar(active, userDetail) {
   return (
     <div className="hidden sm:flex flex-col p-2 xl:items-start fixed h-full">
       <div className="hoverEffect text-center flex items-center">
-        <h1 className="hidden xl:flex xl:items-center font-bold text-xl sm:text-3xl text-blue-600 p-3 ">
+        <Link
+          to="/"
+          className="hidden xl:flex xl:items-center font-bold text-xl sm:text-3xl text-blue-600 p-3 "
+        >
           Soci{""}
           <span>
             <IoEarth />
           </span>
           Sphere
-        </h1>
+        </Link>
         <h1 className="font-bold text-2xl md:inline hidden sm:block xl:hidden text-blue-600 p-3 ">
           <span>
             <IoEarth />
