@@ -2,7 +2,7 @@ import { useRecoilState } from "recoil";
 import { modalState } from "../../atom/modalAtom.js";
 import Modal from "react-modal";
 import { MdClose } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import {
   getDownloadURL,
@@ -11,17 +11,26 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice.js";
 
 export default function ProfileUpdateModal() {
   const [open, setOpen] = useRecoilState(modalState);
   const [file, setFile] = useState(undefined);
   const { currentUser, loading, error } = useSelector((state) => state.user);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    gender: currentUser.gender,
+  });
+  console.log(formData);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+
   const fileRef = useRef(null);
-  const handleSubmit = () => {};
-  const handleChange = () => {};
+  const dispatch = useDispatch();
 
   useEffect(() => {
     document.body.classList.toggle("no-scroll", open);
@@ -35,6 +44,47 @@ export default function ProfileUpdateModal() {
       handleFileUpload(file);
     }
   }, [file]);
+
+  const handleChange = (e) => {
+    if (
+      e.target.id === "female" ||
+      e.target.id === "male" ||
+      e.target.id === "other"
+    ) {
+      setFormData({
+        ...formData,
+        gender: e.target.value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [e.target.id]: e.target.value,
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data));
+      setUpdateSuccess(true);
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
+  };
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -114,6 +164,7 @@ export default function ProfileUpdateModal() {
                     className="border p-1 rounded-md w-44 focus:outline-none"
                     placeholder="First Name"
                     onChange={handleChange}
+                    defaultValue={currentUser.firstName}
                   />
                   <input
                     type="text"
@@ -121,6 +172,7 @@ export default function ProfileUpdateModal() {
                     className="border p-1 rounded-md w-44 focus:outline-none "
                     placeholder="Last Name"
                     onChange={handleChange}
+                    defaultValue={currentUser.lastName}
                   />
                 </div>
                 <div className="my-3">
@@ -130,6 +182,7 @@ export default function ProfileUpdateModal() {
                     placeholder="Email"
                     className="border p-1 rounded-md  w-full focus:outline-none "
                     onChange={handleChange}
+                    defaultValue={currentUser.email}
                   />
                 </div>
                 <div className="my-3">
@@ -152,13 +205,14 @@ export default function ProfileUpdateModal() {
                       className="border p-1 rounded-md w-32 focus:outline-none "
                       onChange={handleChange}
                       placeholder="Day"
+                      defaultValue={currentUser.birthDay}
                     />
                     <select
                       id="month"
                       className="border p-1 rounded-md w-32 focus:outline-none"
                       onChange={handleChange}
                       placeholder="Month"
-                      value={formData.month}
+                      defaultValue={currentUser.birthMonth}
                     >
                       <option value="" disabled>
                         Select Month
@@ -183,6 +237,7 @@ export default function ProfileUpdateModal() {
                       className="border p-1 rounded-md w-32 focus:outline-none"
                       onChange={handleChange}
                       placeholder="Year"
+                      defaultValue={currentUser.birthYear}
                     />
                   </div>
                 </div>
