@@ -1,11 +1,4 @@
 import { useSelector } from "react-redux";
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
-import { app } from "../firebase";
 import { MdEmail } from "react-icons/md";
 import { FaBirthdayCake } from "react-icons/fa";
 import { FaGenderless } from "react-icons/fa";
@@ -14,6 +7,8 @@ import { SlUser, SlUserFemale } from "react-icons/sl";
 import { useEffect, useRef, useState } from "react";
 import { IoIosLogOut } from "react-icons/io";
 import Post from "./Post";
+import { useRecoilState } from "recoil";
+import { modalState } from "../../atom/modalAtom";
 
 export default function Profile() {
   const posts = [
@@ -36,73 +31,20 @@ export default function Profile() {
       timestamp: "2 days ago",
     },
   ];
-  const fileRef = useRef(null);
-  const [file, setFile] = useState(undefined);
-  const [filePerc, setFilePerc] = useState(0);
-  const [fileUploadError, setFileUploadError] = useState(false);
-  const [formData, setFormData] = useState({});
   const { currentUser } = useSelector((state) => state.user);
+  const [open, setOpen] = useRecoilState(modalState);
 
-  useEffect(() => {
-    if (file) {
-      handleFileUpload(file);
-    }
-  }, [file]);
-
-  const handleFileUpload = (file) => {
-    const storage = getStorage(app);
-    const fileName = new Date().getTime() + file.name;
-    const storageRef = ref(storage, fileName);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setFilePerc(Math.round(progress));
-      },
-      (error) => {
-        setFileUploadError(true);
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
-          setFormData({ ...formData, profilePic: downloadURL })
-        );
-      }
-    );
-  };
   return (
     <div className="xl:ml-[300px] border-l border-r border-gray-200  xl:min-w-[700px] sm:ml-[73px] flex-grow max-w-xl">
       <div className="p-3 mx-auto">
         <div className="flex flex-wrap gap-0 sm:gap-10 max-h-96 overflow-y-auto border-b">
           <div className="flex flex-col">
-            <input
-              ref={fileRef}
-              onChange={(e) => setFile(e.target.files[0])}
-              hidden
-              type="file"
-              accept="image/*"
-            />
             <img
-              src={formData.profilePic || currentUser.profilePic}
+              src={currentUser.profilePic}
               alt="profile"
               className="rounded-full w-28 h-28 object-cover my-3 mx-5"
-              onClick={() => fileRef.current.click()}
+              onClick={() => setOpen(!open)}
             />
-            <p className="text-sm text-center">
-              {fileUploadError ? (
-                <span className="text-red-500">Error Image Upload!</span>
-              ) : filePerc > 0 && filePerc < 100 ? (
-                <span className="text-slate-800">{`Uploading ${filePerc}%`}</span>
-              ) : filePerc === 100 ? (
-                <span className="text-green-600">
-                  Image upload successfully.
-                </span>
-              ) : (
-                ""
-              )}
-            </p>
           </div>
           <div className="mt-16">
             <h1 className="font-semibold text-center whitespace-nowrap text-3xl">
@@ -144,7 +86,10 @@ export default function Profile() {
             </div>
           </div>
           <div className="flex justify-between mt-8">
-            <button className="flex items-center gap-2 bg-blue-800 text-white px-3 py-2 rounded-md">
+            <button
+              onClick={() => setOpen(!open)}
+              className="flex items-center gap-2 bg-blue-800 text-white px-3 py-2 rounded-md"
+            >
               <MdModeEditOutline />
               <span>Edit info</span>
             </button>
