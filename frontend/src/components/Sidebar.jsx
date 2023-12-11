@@ -51,10 +51,12 @@ export default function Sidebar(active, userDetail) {
           <FaRegBookmark />
           <span className="hidden xl:inline">Saved</span>
         </div>
-        <div className="flex items-center hoverEffect text-gray-700 justify-center xl:justify-start text-lg  space-x-3">
-          <FaRegUser />
-          <span className="hidden xl:inline">Profile</span>
-        </div>
+        <Link to="/profile">
+          <div className="flex items-center hoverEffect text-gray-700 justify-center xl:justify-start text-lg  space-x-3">
+            <FaRegUser />
+            <span className="hidden xl:inline">Profile</span>
+          </div>
+        </Link>
       </div>
       <Link
         to="/profile"

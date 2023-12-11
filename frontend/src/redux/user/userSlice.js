@@ -34,6 +34,18 @@ export const counterSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    signOutStart: (state) => {
+      state.loading = true;
+    },
+    signOutSuccess: (state, action) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    },
+    signOutFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -44,6 +56,9 @@ export const {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  signOutStart,
+  signOutSuccess,
+  signOutFailure,
 } = counterSlice.actions;
 
 export default counterSlice.reducer;

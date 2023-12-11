@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MdEmail } from "react-icons/md";
 import { FaBirthdayCake } from "react-icons/fa";
 import { FaGenderless } from "react-icons/fa";
@@ -9,6 +9,11 @@ import { IoIosLogOut } from "react-icons/io";
 import Post from "./Post";
 import { useRecoilState } from "recoil";
 import { modalState } from "../../atom/modalAtom";
+import {
+  signOutStart,
+  signOutSuccess,
+  signOutFailure,
+} from "../redux/user/userSlice.js";
 
 export default function Profile() {
   const posts = [
@@ -33,6 +38,22 @@ export default function Profile() {
   ];
   const { currentUser } = useSelector((state) => state.user);
   const [open, setOpen] = useRecoilState(modalState);
+  const dispatch = useDispatch();
+
+  const handleLogOut = async () => {
+    try {
+      dispatch(signOutStart);
+      const res = await fetch("/api/auth/signout");
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(signOutFailure(data.message));
+        return;
+      }
+      dispatch(signOutSuccess(data));
+    } catch (error) {
+      dispatch(signOutFailure(error.message));
+    }
+  };
 
   return (
     <div className="xl:ml-[300px] border-l border-r border-gray-200  xl:min-w-[700px] sm:ml-[73px] flex-grow max-w-xl">
@@ -94,7 +115,10 @@ export default function Profile() {
               <span>Edit info</span>
             </button>
 
-            <button className="flex items-center gap-2 bg-blue-800 text-white px-3 py-2 rounded-md">
+            <button
+              onClick={handleLogOut}
+              className="flex items-center gap-2 bg-blue-800 text-white px-3 py-2 rounded-md"
+            >
               <IoIosLogOut />
               <span>Log Out</span>
             </button>

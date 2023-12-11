@@ -61,3 +61,12 @@ export const signIn = async (req, res, next) => {
     next(error);
   }
 };
+
+export const signOut = (req, res, next) => {
+  try {
+    res.clearCookie("access_token");
+    res.status(201).json("user logged out.");
+  } catch (error) {
+    next(error);
+  }
+};
